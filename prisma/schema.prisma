@@ -11,9 +11,30 @@ datasource db {
 }
 
 model User {
-  id    String @id @default(uuid()) // @ -> nível coluna
-  name  String
-  email String @unique
+  id              String   @id @default(uuid()) // @ -> nível coluna
+  name            String
+  email           String   @unique
+  hashed_password String
+  creted_at       DateTime @default(now())
 
   @@map("users") // @@ -> nível tabela
+}
+
+model Checkin {
+  id           String    @id @default(uuid())
+  created_at   DateTime  @default(now())
+  validated_at DateTime?
+
+  @@map("checkins")
+}
+
+model Gym {
+  id          String  @id @default(uuid())
+  title       String
+  description String?
+  phone       String?
+  latitude    Decimal
+  longitude   Decimal
+
+  @@map("gyms")
 }
