@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma"
+import { PrismaUsersRepository } from "@/repositories/prisma-users-repository"
 import { hash } from "bcryptjs"
 
 interface RegisterServicieRequest {
@@ -7,6 +8,7 @@ interface RegisterServicieRequest {
     password: string
 }
 
+// Service/Use Cases -> Lida com todas as alterações na percursão do dado ao banco
 export const registerService = async ({
     name, email, password
 }: RegisterServicieRequest) => {
@@ -19,11 +21,6 @@ export const registerService = async ({
         throw new Error("Email já existe!")
     }
 
-    await prisma.user.create({
-        data: {
-            email,
-            name,
-            hashed_password
-        }
-    })
+    const prismaUsersRepository = new PrismaUsersRepository
+    prismaUsersRepository.create({ name, email, hashed_password })
 }

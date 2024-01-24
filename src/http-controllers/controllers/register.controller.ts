@@ -1,9 +1,8 @@
 import { z } from 'zod'
-import { prisma } from "@/lib/prisma"
 import { FastifyRequest, FastifyReply } from 'fastify'
-import { hash } from "bcryptjs"
-import { registerService } from '@/env/services-use-cases/register.service'
+import { registerService } from '@/services-use-cases/register.service'
 
+// Controller -> Recebe e devolve as respostas HTTP
 export const register = async (request: FastifyRequest, reply: FastifyReply) => {
     console.log('request', request)
     const registerBodySchema = z.object({
