@@ -11,11 +11,12 @@ datasource db {
 }
 
 model User {
-  id              String   @id @default(uuid()) // @ -> nível coluna
+  id              String    @id @default(uuid()) // @ -> nível coluna
   name            String
-  email           String   @unique
+  email           String    @unique
   hashed_password String
-  creted_at       DateTime @default(now())
+  creted_at       DateTime  @default(now())
+  checkins        Checkin[]
 
   @@map("users") // @@ -> nível tabela
 }
@@ -24,17 +25,22 @@ model Checkin {
   id           String    @id @default(uuid())
   created_at   DateTime  @default(now())
   validated_at DateTime?
+  user         User      @relation(fields: [user_id], references: [id])
+  user_id      String
+  gym          Gym       @relation(fields: [gym_id], references: [id])
+  gym_id       String
 
   @@map("checkins")
 }
 
 model Gym {
-  id          String  @id @default(uuid())
+  id          String    @id @default(uuid())
   title       String
   description String?
   phone       String?
   latitude    Decimal
   longitude   Decimal
+  checkIn     Checkin[]
 
   @@map("gyms")
 }
