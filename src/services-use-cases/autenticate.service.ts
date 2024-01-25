@@ -20,11 +20,11 @@ export class AutenticationService {
         // autenticação
         const user = await this.usersRepository.findByEmail(email)
 
-        if (!user) throw new InvalidCredentialsError()
+        if (!user) { throw new InvalidCredentialsError() }
 
         const doesPasswordMatches = await compare(password, user.hashed_password)
 
-        if (!doesPasswordMatches) throw new InvalidCredentialsError()
+        if (!doesPasswordMatches) { throw new InvalidCredentialsError() }
 
         return {
             user
