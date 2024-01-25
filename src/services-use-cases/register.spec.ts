@@ -4,6 +4,8 @@ import { compare } from 'bcryptjs'
 import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users.repository'
 import { UserAlreadyExistsError } from './errors/user-already-exists-error'
 
+// it.skip || it.only
+
 describe('Testes para Register Services', () => {
     it('Deve ser possível registrar-se', async () => {
 
