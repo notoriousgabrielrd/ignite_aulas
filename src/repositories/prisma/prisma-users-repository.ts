@@ -6,6 +6,11 @@ import { UserInterfaceRepository } from "../users.interface.repository";
 // Repository -> Responsável pelo CRUD diretamente dentro do banco
 export class PrismaUsersRepository implements UserInterfaceRepository {
 
+    async findById(userId: string) {
+        const user = await prisma.user.findUnique({ where: { id: userId } })
+        return user
+    }
+
     async findByEmail(email: string) {
         const userEmail = await prisma.user.findUnique({ where: { email } })
         return userEmail
