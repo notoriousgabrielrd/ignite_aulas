@@ -1,7 +1,4 @@
-import { UserInterfaceRepository } from "@/repositories/users.interface.repository"
-import { hash } from "bcryptjs"
-import { UserAlreadyExistsError } from "../errors/user-already-exists-error"
-import { Checkin, User } from "@prisma/client"
+import { Checkin } from "@prisma/client"
 import { CheckInsRepository } from "@/repositories/prisma/checkin-repository"
 
 interface CheckinServicieRequest {
@@ -17,7 +14,11 @@ interface CheckinServiceResponse {
 export class CheckinService {
     constructor(private checkinsRepository: CheckInsRepository) { }
 
-    executeRegisterService = async ({ userId, gymId }: CheckinServicieRequest): Promise<CheckinServiceResponse> => {
+    executeCheckinService = async ({ userId, gymId }: CheckinServicieRequest): Promise<CheckinServiceResponse> => {
+        const checkInOnSamedate = await this.checkinsRepository.findByUserIdOnDate(userId, new Date())
+
+        if (checkInOnSamedate) throw new Error()
+
         const checkin = await this.checkinsRepository.create({
             gym_id: gymId,
             user_id: userId
