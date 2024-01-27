@@ -3,6 +3,8 @@ import { InMemoryCheckinRepository } from '@/repositories/in-memory/in-memory-ch
 import { CheckinService } from './checkin.service'
 import { InMemoryGymRepository } from '@/repositories/in-memory/in-memory-gyms-repository'
 import { Decimal } from '@prisma/client/runtime/library'
+import { MaxNumberOfCheckinsError } from '../errors/max-number-of-checkins-error'
+import { MaxDistanceError } from '../errors/max-distance-error'
 
 // it.skip || it.only
 let checkinRepository: InMemoryCheckinRepository
@@ -10,18 +12,18 @@ let gymsRepository: InMemoryGymRepository
 let sut: CheckinService // S.U.T -> System Under Test
 
 describe('Testes para Checkin Services', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
         checkinRepository = new InMemoryCheckinRepository()
         gymsRepository = new InMemoryGymRepository()
         sut = new CheckinService(checkinRepository, gymsRepository)
         vi.useFakeTimers()
 
-        gymsRepository.items.push({
+        await gymsRepository.create({
             id: 'gym-01',
             title: 'Academia JS',
             description: '',
-            latitude: new Decimal(0),
-            longitude: new Decimal(0),
+            latitude: 0,
+            longitude: 0,
             phone: ''
         })
     })
@@ -58,7 +60,7 @@ describe('Testes para Checkin Services', () => {
                 latitude: 0,
                 longitude: 0
             })
-        }).rejects.toBeInstanceOf(Error)
+        }).rejects.toBeInstanceOf(MaxNumberOfCheckinsError)
     })
 
     it('Deve ser possível checar-se 2x no mesmo dia, mas em dias diferentes', async () => {
@@ -100,7 +102,7 @@ describe('Testes para Checkin Services', () => {
                 latitude: -16.0428182,
                 longitude: -47.861419
             })
-        }).rejects.toBeInstanceOf(Error)
+        }).rejects.toBeInstanceOf(MaxDistanceError)
 
     })
 
